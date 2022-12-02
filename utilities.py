@@ -8,6 +8,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.model_selection import GridSearchCV, train_test_split
 
+mpl.style.use("ggplot")
+
 # Plot function for results
 def DistributionPlot(redFunc, blueFunc, redName, blueName, title):
     width, height = 12, 10
