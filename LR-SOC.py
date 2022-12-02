@@ -10,7 +10,6 @@ from utilities import DistributionPlot
 
 # a dictionary to store model scores
 models_scores = {
-    "model_names": [],
     "poly_degree": [],
     "r2": [],
     "mae": [],
@@ -25,11 +24,10 @@ models_scores = {
 
 
 # create polynomial linear model
-def linear_model(df, model_name, degree):
+def linear_model(df, degree, features, target_feature):
     # Feature selection
-    features = ["ElapsedTime", "Temperature", "Voltage", "Current"]
     X = df[features]
-    y = df["SOC"]
+    y = df[target_feature]
 
     # Normalize data
     scaler = StandardScaler()
@@ -55,7 +53,6 @@ def linear_model(df, model_name, degree):
     yhat = model.predict(X_poly)
 
     # update model score dictionary
-    models_scores["model_names"].append(model_name)
     models_scores["poly_degree"].append(degree)
     models_scores["r2"].append(model.score(X_poly, y))
     models_scores["mae"].append(mean_absolute_error(y, yhat))
@@ -79,8 +76,12 @@ def main():
     # read data
     df = pd.read_csv("data/wd_all.csv", index_col="Unnamed: 0")
 
-    # use linear_model function
-    y_all, yhat_all = linear_model(df, "df_all", 5)
+    # use linear_model function to predict SOC
+    features = ["ElapsedTime", "Temperature", "Voltage", "Current"]
+    y_all, yhat_all = linear_model(df, 5, features, ["SOC"])
+
+    # features = ["ElapsedTime", "Voltage", "Current"]
+    # y_all, yhat_all = linear_model(df, 7, features, ["Temperature"])
 
     df_score = pd.DataFrame(models_scores)
     print(df_score)
